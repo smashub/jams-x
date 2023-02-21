@@ -7,8 +7,8 @@ from six.moves import reload_module
 import pytest
 import os
 
-from jams import NamespaceError
-import jams
+from jamsx import NamespaceError
+import jamsx
 
 
 @pytest.mark.parametrize('ns_key',
@@ -17,7 +17,7 @@ import jams
 def test_schema_namespace(ns_key):
 
     # Get the schema
-    schema = jams.schema.namespace(ns_key)
+    schema = jamsx.schema.namespace(ns_key)
 
     # Make sure it has the correct properties
     valid_keys = set(['time', 'duration', 'value', 'confidence'])
@@ -34,21 +34,21 @@ def test_schema_namespace(ns_key):
                           pytest.mark.xfail(('DNE', False),
                                             raises=NamespaceError)])
 def test_schema_is_dense(ns, dense):
-    assert dense == jams.schema.is_dense(ns)
+    assert dense == jamsx.schema.is_dense(ns)
 
 
 @pytest.fixture
 def local_namespace():
 
     os.environ['JAMS_SCHEMA_DIR'] = os.path.join('tests', 'fixtures', 'schema')
-    reload_module(jams)
+    reload_module(jamsx)
 
     # This one should pass
     yield 'testing_tag_upper', True
 
     # Cleanup
     del os.environ['JAMS_SCHEMA_DIR']
-    reload_module(jams)
+    reload_module(jamsx)
 
 
 def test_schema_local(local_namespace):
@@ -57,7 +57,7 @@ def test_schema_local(local_namespace):
 
     # Get the schema
     if exists:
-        schema = jams.schema.namespace(ns_key)
+        schema = jamsx.schema.namespace(ns_key)
 
         # Make sure it has the correct properties
         valid_keys = set(['time', 'duration', 'value', 'confidence'])
@@ -68,12 +68,12 @@ def test_schema_local(local_namespace):
             assert key in schema['properties']
     else:
         with pytest.raises(NamespaceError):
-            schema = jams.schema.namespace(ns_key)
+            schema = jamsx.schema.namespace(ns_key)
 
 
 def test_schema_values_pass():
 
-    values = jams.schema.values('tag_gtzan')
+    values = jamsx.schema.values('tag_gtzan')
 
     assert values == ['blues', 'classical', 'country',
                       'disco', 'hip-hop', 'jazz', 'metal',
@@ -82,24 +82,24 @@ def test_schema_values_pass():
 
 @pytest.mark.xfail(raises=NamespaceError)
 def test_schema_values_missing():
-    jams.schema.values('imaginary namespace')
+    jamsx.schema.values('imaginary namespace')
 
 
 @pytest.mark.xfail(raises=NamespaceError)
 def test_schema_values_notenum():
-    jams.schema.values('chord_harte')
+    jamsx.schema.values('chord_harte')
 
 
 def test_schema_dtypes():
 
-    for n in jams.schema.__NAMESPACE__:
-        jams.schema.get_dtypes(n)
+    for n in jamsx.schema.__NAMESPACE__:
+        jamsx.schema.get_dtypes(n)
 
 
 @pytest.mark.xfail(raises=NamespaceError)
 def test_schema_dtypes_badns():
-    jams.schema.get_dtypes('unknown namespace')
+    jamsx.schema.get_dtypes('unknown namespace')
 
 
 def test_list_namespaces():
-    jams.schema.list_namespaces()
+    jamsx.schema.list_namespaces()

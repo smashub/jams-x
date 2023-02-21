@@ -4,7 +4,7 @@
 
 import numpy as np
 import pytest
-import jams
+import jamsx
 
 from test_util import srand
 
@@ -12,7 +12,7 @@ from test_util import srand
 # Fixtures
 def create_annotation(values, namespace='beat', offset=0.0, duration=1,
                       confidence=1):
-    ann = jams.Annotation(namespace=namespace)
+    ann = jamsx.Annotation(namespace=namespace)
 
     time = np.arange(offset, offset + len(values))
 
@@ -30,7 +30,7 @@ def create_annotation(values, namespace='beat', offset=0.0, duration=1,
 
 
 def create_hierarchy(values, offset=0.0, duration=20):
-    ann = jams.Annotation(namespace='multi_segment')
+    ann = jamsx.Annotation(namespace='multi_segment')
 
     for level, labels in enumerate(values):
         times = np.linspace(offset, offset + duration, num=len(labels),
@@ -167,7 +167,7 @@ def est_badmelody():
 
 @pytest.fixture(scope='module')
 def ref_pattern():
-    ref_jam = jams.load('tests/fixtures/pattern_data.jams', validate=False)
+    ref_jam = jamsx.load('tests/fixtures/pattern_data.jams', validate=False)
     return ref_jam.annotations['pattern_jku', 0]
 
 
@@ -199,19 +199,19 @@ def est_badhier():
 
 @pytest.fixture(scope='module')
 def ref_transcript():
-    ref_jam = jams.load('tests/fixtures/transcription_ref.jams', validate=False)
+    ref_jam = jamsx.load('tests/fixtures/transcription_ref.jams', validate=False)
     return ref_jam.annotations['pitch_hz', 0]
 
 
 @pytest.fixture(scope='module')
 def est_transcript():
-    est_jam = jams.load('tests/fixtures/transcription_est.jams', validate=False)
+    est_jam = jamsx.load('tests/fixtures/transcription_est.jams', validate=False)
     return est_jam.annotations['pitch_hz', 0]
 
 
 @pytest.fixture(scope='module')
 def est_badtranscript():
-    est_jam = jams.load('tests/fixtures/transcription_est.jams', validate=False)
+    est_jam = jamsx.load('tests/fixtures/transcription_est.jams', validate=False)
     ann = est_jam.annotations['pitch_hz', 0]
     ann.append(time=2., duration=1., value=None, confidence=1)
     return ann
@@ -220,156 +220,156 @@ def est_badtranscript():
 # Beat tracking
 def test_beat_valid(ref_beat, est_beat):
 
-    jams.eval.beat(ref_beat, est_beat)
+    jamsx.eval.beat(ref_beat, est_beat)
 
 
 def test_beat_invalid(ref_beat, est_onset):
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.beat(ref_beat, est_onset)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.beat(est_onset, ref_beat)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.beat(ref_beat, est_onset)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.beat(est_onset, ref_beat)
 
 
 # Onset detection
 def test_onset_valid(ref_onset, est_onset):
-    jams.eval.onset(ref_onset, est_onset)
+    jamsx.eval.onset(ref_onset, est_onset)
 
 
 def test_onset_invalid(ref_onset, est_beat):
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.onset(ref_onset, est_beat)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.onset(est_beat, ref_onset)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.onset(ref_onset, est_beat)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.onset(est_beat, ref_onset)
 
 
 # Chord estimation
 def test_chord_valid(ref_chord, est_chord):
-    jams.eval.chord(ref_chord, est_chord)
+    jamsx.eval.chord(ref_chord, est_chord)
 
 
 def test_chord_noconvert(ref_chord, est_roman):
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.chord(ref_chord, est_roman)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.chord(est_roman, ref_chord)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.chord(ref_chord, est_roman)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.chord(est_roman, ref_chord)
 
 
 def test_chord_invalid(ref_chord, est_badchord):
-    with pytest.raises(jams.SchemaError):
-        jams.eval.chord(ref_chord, est_badchord)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.chord(est_badchord, ref_chord)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.chord(ref_chord, est_badchord)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.chord(est_badchord, ref_chord)
 
 
 # Segmentation
 def test_segment_valid(ref_segment, est_segment):
-    jams.eval.segment(ref_segment, est_segment)
+    jamsx.eval.segment(ref_segment, est_segment)
 
 
 def test_segment_noconvert(ref_segment, est_chord):
 
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.segment(ref_segment, est_chord)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.segment(est_chord, ref_segment)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.segment(ref_segment, est_chord)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.segment(est_chord, ref_segment)
 
 
 def test_segment_invalid(ref_segment, est_segtut):
 
-    with pytest.raises(jams.SchemaError):
-        jams.eval.segment(ref_segment, est_segtut)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.segment(est_segtut, ref_segment)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.segment(ref_segment, est_segtut)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.segment(est_segtut, ref_segment)
 
 
 # Tempo estimation
 def test_tempo_valid(ref_tempo, est_tempo):
-    jams.eval.tempo(ref_tempo, est_tempo)
+    jamsx.eval.tempo(ref_tempo, est_tempo)
 
 
 def test_tempo_noconvert(ref_tempo, est_tag):
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.tempo(ref_tempo, est_tag)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.tempo(est_tag, ref_tempo)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.tempo(ref_tempo, est_tag)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.tempo(est_tag, ref_tempo)
 
 
 def test_tempo_invalid(ref_tempo, est_badtempo):
-    with pytest.raises(jams.SchemaError):
-        jams.eval.tempo(ref_tempo, est_badtempo)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.tempo(est_badtempo, ref_tempo)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.tempo(ref_tempo, est_badtempo)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.tempo(est_badtempo, ref_tempo)
 
 
 # Melody
 def test_melody_valid(ref_melody, est_melody):
 
-    jams.eval.melody(ref_melody, est_melody)
+    jamsx.eval.melody(ref_melody, est_melody)
 
 
 def test_melody_noconvert(ref_melody, est_tag):
 
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.melody(ref_melody, est_tag)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.melody(est_tag, ref_melody)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.melody(ref_melody, est_tag)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.melody(est_tag, ref_melody)
 
 
 def test_melody_invalid(ref_melody, est_badmelody):
-    with pytest.raises(jams.SchemaError):
-        jams.eval.melody(ref_melody, est_badmelody)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.melody(est_badmelody, ref_melody)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.melody(ref_melody, est_badmelody)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.melody(est_badmelody, ref_melody)
 
 
 # Pattern discovery
 def test_pattern_valid(ref_pattern):
-    jams.eval.pattern(ref_pattern, ref_pattern)
+    jamsx.eval.pattern(ref_pattern, ref_pattern)
 
 
 def test_pattern_noconvert(ref_pattern, est_beat):
 
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.pattern(ref_pattern, est_beat)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.pattern(est_beat, ref_pattern)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.pattern(ref_pattern, est_beat)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.pattern(est_beat, ref_pattern)
 
 
 def test_pattern_invalid(ref_pattern, est_badpattern):
     # Check for failure on a badly formed pattern
-    with pytest.raises(jams.SchemaError):
-        jams.eval.pattern(ref_pattern, est_badpattern)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.pattern(est_badpattern, ref_pattern)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.pattern(ref_pattern, est_badpattern)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.pattern(est_badpattern, ref_pattern)
 
 
 # Hierarchical segmentation
 def test_hierarchy_valid(ref_hier, est_hier):
-    jams.eval.hierarchy(ref_hier, est_hier)
+    jamsx.eval.hierarchy(ref_hier, est_hier)
 
 
 def test_hierarchy_noconvert(ref_hier, est_tag):
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.hierarchy(ref_hier, est_tag)
-    with pytest.raises(jams.NamespaceError):
-        jams.eval.hierarchy(est_tag, ref_hier)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.hierarchy(ref_hier, est_tag)
+    with pytest.raises(jamsx.NamespaceError):
+        jamsx.eval.hierarchy(est_tag, ref_hier)
 
 
 def test_hierarchy_invalid(ref_hier, est_badhier):
-    with pytest.raises(jams.SchemaError):
-        jams.eval.hierarchy(ref_hier, est_badhier)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.hierarchy(est_badhier, ref_hier)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.hierarchy(ref_hier, est_badhier)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.hierarchy(est_badhier, ref_hier)
 
 
 def test_transcription_valid(ref_transcript, est_transcript):
 
-    jams.eval.transcription(ref_transcript, est_transcript)
+    jamsx.eval.transcription(ref_transcript, est_transcript)
 
 
 def test_transcription_invalid(ref_transcript, est_badtranscript):
 
-    with pytest.raises(jams.SchemaError):
-        jams.eval.transcription(ref_transcript, est_badtranscript)
-    with pytest.raises(jams.SchemaError):
-        jams.eval.transcription(est_badtranscript, ref_transcript)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.transcription(ref_transcript, est_badtranscript)
+    with pytest.raises(jamsx.SchemaError):
+        jamsx.eval.transcription(est_badtranscript, ref_transcript)

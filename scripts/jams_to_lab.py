@@ -8,7 +8,7 @@ import os
 import json
 import pandas as pd
 
-import jams
+import jamsx
 
 
 def get_output_name(output_prefix, namespace, index):
@@ -115,7 +115,7 @@ def convert_jams(jams_file, output_prefix, csv=False, comment_char='#', namespac
     if namespaces is None:
         raise ValueError('No namespaces provided. Try ".*" for all namespaces.')
 
-    jam = jams.load(jams_file)
+    jam = jamsx.load(jams_file)
 
     # Get all the annotations
     # Filter down to the unique ones

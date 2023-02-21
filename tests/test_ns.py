@@ -7,9 +7,9 @@ import numpy as np
 
 import pytest
 
-from jams import SchemaError
+from jamsx import SchemaError
 
-from jams import Annotation, Observation
+from jamsx import Annotation, Observation
 
 from test_util import srand
 

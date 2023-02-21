@@ -2,15 +2,15 @@ from setuptools import setup, find_packages
 
 import imp
 
-version = imp.load_source('jams.version', 'jams/version.py')
+version = imp.load_source('jamsx.version', 'jamsx/version.py')
 
 setup(
-    name='jams',
+    name='jamsx',
     version=version.version,
-    description='A JSON Annotated Music Specification for Reproducible MIR Research',
-    author='JAMS development crew',
-    url='http://github.com/marl/jams',
-    download_url='http://github.com/marl/jams/releases',
+    description='A JAMS extension to support audio and symbolic annotations.',
+    author='JAMS-X development crew',
+    url='https://github.com/smashub/jams-x',
+    download_url='https://github.com/smashub/jams-x/releases',
     packages=find_packages(),
     package_data={'': ['schemata/*.json',
                        'schemata/namespaces/*.json',
@@ -31,7 +31,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8"
     ],
-    keywords='audio music json',
+    keywords='audio symbolic music json',
     license='ISC',
     install_requires=[
         'pandas',
@@ -47,5 +47,5 @@ setup(
         'display': ['matplotlib>=1.5.0'],
         'tests': ['pytest < 4', 'pytest-cov'],
     },
-    scripts=['scripts/jams_to_lab.py']
+    scripts=['scripts/jamsx_to_lab.py']
 )

@@ -5,17 +5,17 @@
 import numpy as np
 
 import pytest
-import jams
-from jams import NamespaceError
+import jamsx
+from jamsx import NamespaceError
 
 
 @pytest.mark.xfail(raises=NamespaceError)
 def test_bad_target():
 
-    ann = jams.Annotation(namespace='tag_open')
+    ann = jamsx.Annotation(namespace='tag_open')
     ann.append(time=0, duration=1, value='foo', confidence=1)
 
-    jams.convert(ann, 'bad namespace')
+    jamsx.convert(ann, 'bad namespace')
 
 
 @pytest.mark.parametrize('target',
@@ -24,21 +24,21 @@ def test_bad_target():
 @pytest.mark.xfail(raises=NamespaceError)
 def test_bad_sources(target):
 
-    ann = jams.Annotation(namespace='vector')
-    jams.convert(ann, target)
+    ann = jamsx.Annotation(namespace='vector')
+    jamsx.convert(ann, target)
 
 
-@pytest.mark.parametrize('namespace', list(jams.schema.__NAMESPACE__.keys()))
+@pytest.mark.parametrize('namespace', list(jamsx.schema.__NAMESPACE__.keys()))
 def test_noop(namespace):
 
-    ann = jams.Annotation(namespace=namespace)
-    a2 = jams.convert(ann, namespace)
+    ann = jamsx.Annotation(namespace=namespace)
+    a2 = jamsx.convert(ann, namespace)
     assert ann == a2
 
 
 def test_pitch_hz_to_contour():
 
-    ann = jams.Annotation(namespace='pitch_hz')
+    ann = jamsx.Annotation(namespace='pitch_hz')
     values = np.linspace(110, 220, num=100)
     # Unvoice the first half
     values[::len(values)//2] *= -1
@@ -48,7 +48,7 @@ def test_pitch_hz_to_contour():
     for t, v in zip(times, values):
         ann.append(time=t, value=v, duration=0)
 
-    ann2 = jams.convert(ann, 'pitch_contour')
+    ann2 = jamsx.convert(ann, 'pitch_contour')
     ann.validate()
     ann2.validate()
     assert ann2.namespace == 'pitch_contour'
@@ -68,7 +68,7 @@ def test_pitch_hz_to_contour():
 
 def test_pitch_midi_to_contour():
 
-    ann = jams.Annotation(namespace='pitch_midi')
+    ann = jamsx.Annotation(namespace='pitch_midi')
     values = np.arange(100)
 
     times = np.linspace(0, 1, num=len(values))
@@ -76,7 +76,7 @@ def test_pitch_midi_to_contour():
     for t, v in zip(times, values):
         ann.append(time=t, value=v, duration=0)
 
-    ann2 = jams.convert(ann, 'pitch_contour')
+    ann2 = jamsx.convert(ann, 'pitch_contour')
     ann.validate()
     ann2.validate()
     assert ann2.namespace == 'pitch_contour'
@@ -91,9 +91,9 @@ def test_pitch_midi_to_contour():
 
 def test_pitch_midi_to_hz():
 
-    ann = jams.Annotation(namespace='pitch_midi')
+    ann = jamsx.Annotation(namespace='pitch_midi')
     ann.append(time=0, duration=1, value=69, confidence=0.5)
-    ann2 = jams.convert(ann, 'pitch_hz')
+    ann2 = jamsx.convert(ann, 'pitch_hz')
     ann.validate()
     ann2.validate()
 
@@ -113,9 +113,9 @@ def test_pitch_midi_to_hz():
 
 def test_pitch_hz_to_midi():
 
-    ann = jams.Annotation(namespace='pitch_hz')
+    ann = jamsx.Annotation(namespace='pitch_hz')
     ann.append(time=0, duration=1, value=440.0, confidence=0.5)
-    ann2 = jams.convert(ann, 'pitch_midi')
+    ann2 = jamsx.convert(ann, 'pitch_midi')
     ann.validate()
     ann2.validate()
 
@@ -135,9 +135,9 @@ def test_pitch_hz_to_midi():
 
 def test_note_midi_to_hz():
 
-    ann = jams.Annotation(namespace='note_midi')
+    ann = jamsx.Annotation(namespace='note_midi')
     ann.append(time=0, duration=1, value=69, confidence=0.5)
-    ann2 = jams.convert(ann, 'note_hz')
+    ann2 = jamsx.convert(ann, 'note_hz')
     ann.validate()
     ann2.validate()
 
@@ -157,9 +157,9 @@ def test_note_midi_to_hz():
 
 def test_note_hz_to_midi():
 
-    ann = jams.Annotation(namespace='note_hz')
+    ann = jamsx.Annotation(namespace='note_hz')
     ann.append(time=0, duration=1, value=440.0, confidence=0.5)
-    ann2 = jams.convert(ann, 'note_midi')
+    ann2 = jamsx.convert(ann, 'note_midi')
     ann.validate()
     ann2.validate()
 
@@ -179,9 +179,9 @@ def test_note_hz_to_midi():
 
 def test_segment_open():
 
-    ann = jams.Annotation(namespace='segment_salami_upper')
+    ann = jamsx.Annotation(namespace='segment_salami_upper')
     ann.append(time=0, duration=1, value='A', confidence=0.5)
-    ann2 = jams.convert(ann, 'segment_open')
+    ann2 = jamsx.convert(ann, 'segment_open')
     ann.validate()
     ann2.validate()
 
@@ -195,9 +195,9 @@ def test_segment_open():
 
 def test_tag_open():
 
-    ann = jams.Annotation(namespace='tag_gtzan')
+    ann = jamsx.Annotation(namespace='tag_gtzan')
     ann.append(time=0, duration=1, value='reggae', confidence=0.5)
-    ann2 = jams.convert(ann, 'tag_open')
+    ann2 = jamsx.convert(ann, 'tag_open')
     ann.validate()
     ann2.validate()
 
@@ -211,9 +211,9 @@ def test_tag_open():
 
 def test_chord():
 
-    ann = jams.Annotation(namespace='chord_harte')
+    ann = jamsx.Annotation(namespace='chord_harte')
     ann.append(time=0, duration=1, value='C:maj6', confidence=0.5)
-    ann2 = jams.convert(ann, 'chord')
+    ann2 = jamsx.convert(ann, 'chord')
     ann.validate()
     ann2.validate()
 
@@ -227,7 +227,7 @@ def test_chord():
 
 def test_beat_position():
 
-    ann = jams.Annotation(namespace='beat_position')
+    ann = jamsx.Annotation(namespace='beat_position')
     ann.append(time=0, duration=0, confidence=0.5,
                value=dict(position=1, measure=0, num_beats=4, beat_units=4))
     ann.append(time=0.5, duration=0, confidence=0.5,
@@ -237,7 +237,7 @@ def test_beat_position():
     ann.append(time=1.5, duration=0, confidence=0.5,
                value=dict(position=4, measure=0, num_beats=4, beat_units=4))
 
-    ann2 = jams.convert(ann, 'beat')
+    ann2 = jamsx.convert(ann, 'beat')
 
     ann.validate()
     ann2.validate()
@@ -254,7 +254,7 @@ def test_beat_position():
 
 
 def test_scaper_tag_open():
-    ann = jams.Annotation(namespace='scaper')
+    ann = jamsx.Annotation(namespace='scaper')
 
     value = {
         "source_time": 5,
@@ -270,7 +270,7 @@ def test_scaper_tag_open():
 
     ann.append(time=0, duration=1, value=value)
 
-    ann2 = jams.convert(ann, 'tag_open')
+    ann2 = jamsx.convert(ann, 'tag_open')
 
     ann.validate()
     ann2.validate()
@@ -286,17 +286,17 @@ def test_scaper_tag_open():
 
 def test_can_convert_equal():
 
-    ann = jams.Annotation(namespace='chord')
-    assert jams.nsconvert.can_convert(ann, 'chord')
+    ann = jamsx.Annotation(namespace='chord')
+    assert jamsx.nsconvert.can_convert(ann, 'chord')
 
 
 def test_can_convert_cast():
 
-    ann = jams.Annotation(namespace='tag_gtzan')
-    assert jams.nsconvert.can_convert(ann, 'tag_open')
+    ann = jamsx.Annotation(namespace='tag_gtzan')
+    assert jamsx.nsconvert.can_convert(ann, 'tag_open')
 
 
 def test_can_convert_fail():
 
-    ann = jams.Annotation(namespace='tag_gtzan')
-    assert not jams.nsconvert.can_convert(ann, 'chord')
+    ann = jamsx.Annotation(namespace='tag_gtzan')
+    assert not jamsx.nsconvert.can_convert(ann, 'chord')

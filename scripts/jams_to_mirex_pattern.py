@@ -10,7 +10,7 @@ Example usage:
 import json
 import sys
 from argparse import ArgumentParser
-import jams
+import jamsx
 
 def parse_arguments(args):
 

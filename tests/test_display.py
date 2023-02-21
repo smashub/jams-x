@@ -8,10 +8,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import pytest
-import jams
-import jams.display
+import jamsx
+import jamsx.display
 
-from jams import NamespaceError
+from jamsx import NamespaceError
 
 
 # A simple run-without-fail test for plotting
@@ -23,29 +23,29 @@ from jams import NamespaceError
 @pytest.mark.parametrize('meta', [False, True])
 def test_display(namespace, meta):
 
-    ann = jams.Annotation(namespace=namespace)
-    jams.display.display(ann, meta=meta)
+    ann = jamsx.Annotation(namespace=namespace)
+    jamsx.display.display(ann, meta=meta)
 
 
 def test_display_multi():
 
-    jam = jams.JAMS()
-    jam.annotations.append(jams.Annotation(namespace='beat'))
-    jams.display.display_multi(jam.annotations)
+    jam = jamsx.JAMS()
+    jam.annotations.append(jamsx.Annotation(namespace='beat'))
+    jamsx.display.display_multi(jam.annotations)
 
 
 def test_display_multi_multi():
 
-    jam = jams.JAMS()
-    jam.annotations.append(jams.Annotation(namespace='beat'))
-    jam.annotations.append(jams.Annotation(namespace='chord'))
+    jam = jamsx.JAMS()
+    jam.annotations.append(jamsx.Annotation(namespace='beat'))
+    jam.annotations.append(jamsx.Annotation(namespace='chord'))
 
-    jams.display.display_multi(jam.annotations)
+    jamsx.display.display_multi(jam.annotations)
 
 
 def test_display_pitch_contour():
 
-    ann = jams.Annotation(namespace='pitch_hz', duration=5)
+    ann = jamsx.Annotation(namespace='pitch_hz', duration=5)
 
     values = np.arange(100, 200)
     times = np.linspace(0, 2, num=len(values))
@@ -53,7 +53,7 @@ def test_display_pitch_contour():
     for t, v in zip(times, values):
         ann.append(time=t, value=v, duration=0)
 
-    jams.display.display(ann)
+    jamsx.display.display(ann)
 
 
 def test_display_labeled_events():
@@ -61,16 +61,16 @@ def test_display_labeled_events():
     times = np.arange(40)
     values = times % 4
 
-    ann = jams.Annotation(namespace='beat', duration=60)
+    ann = jamsx.Annotation(namespace='beat', duration=60)
 
     for t, v in zip(times, values):
         ann.append(time=t, value=v, duration=0)
 
-    jams.display.display(ann)
+    jamsx.display.display(ann)
 
 
-@pytest.mark.xfail(raises=jams.ParameterError)
+@pytest.mark.xfail(raises=jamsx.ParameterError)
 def test_display_multi_fail():
 
-    anns = jams.AnnotationArray()
-    jams.display.display_multi(anns)
+    anns = jamsx.AnnotationArray()
+    jamsx.display.display_multi(anns)

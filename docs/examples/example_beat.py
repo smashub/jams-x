@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import librosa
-import jams
+import jamsx
 
 
 def beat_track(infile, outfile):
@@ -19,13 +19,13 @@ def beat_track(infile, outfile):
     beat_times = librosa.frames_to_time(beat_frames, sr=sr)
 
     # Construct a new JAMS object and annotation records
-    jam = jams.JAMS()
+    jam = jamsx.JAMS()
 
     # Store the track duration
     jam.file_metadata.duration = track_duration
 
-    beat_a = jams.Annotation(namespace='beat')
-    beat_a.annotation_metadata = jams.AnnotationMetadata(data_source='librosa beat tracker')
+    beat_a = jamsx.Annotation(namespace='beat')
+    beat_a.annotation_metadata = jamsx.AnnotationMetadata(data_source='librosa beat tracker')
 
     # Add beat timings to the annotation record.
     # The beat namespace does not require value or confidence fields,
@@ -37,8 +37,8 @@ def beat_track(infile, outfile):
     jam.annotations.append(beat_a)
 
     # Add tempo estimation to the annotation.
-    tempo_a = jams.Annotation(namespace='tempo', time=0, duration=track_duration)
-    tempo_a.annotation_metadata = jams.AnnotationMetadata(data_source='librosa tempo estimator')
+    tempo_a = jamsx.Annotation(namespace='tempo', time=0, duration=track_duration)
+    tempo_a.annotation_metadata = jamsx.AnnotationMetadata(data_source='librosa tempo estimator')
 
     # The tempo estimate is global, so it should start at time=0 and cover the full
     # track duration.

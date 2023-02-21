@@ -7,7 +7,7 @@ import os
 import pytest
 import numpy as np
 
-from jams import core, util
+from jamsx import core, util
 
 
 import six
